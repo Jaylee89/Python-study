@@ -1,0 +1,10 @@
+<uwsgi>
+	<chdir>D:\software\preinstall\DevelopTool\python\demo\flask_blog</chdir>
+	<module>flask_blog</module>
+	<callable>app</callable>
+	<socket>0.0.0.0:3032</socket> 
+	<daemonize>D:\software\preinstall\DevelopTool\python\demo\flask_blog\uwsgi.flask.blog.log</daemonize>
+	<master/>
+	<processes>4</processes>
+	<memory-report/>
+</uwsgi>

@@ -1,0 +1,71 @@
+{% extends 'front/layout.html' %}
+
+{% block body %}
+    <div class="container margintop10">
+		<div class="panel panel-default">
+		  	<div class="panel-heading">
+				Apple 抓取结果 <span class="label label-warning">统计总数：{{ itunes_sum }}</span>
+			</div>
+			{% if not export_state %}
+			<div class="panel-heading">
+				<div class="alert alert-success" role="alert">
+				{{ export_message }}
+				</div>
+			</div>
+			{% endif %}
+			<div class="panel-body">
+				<form class="form-inline" action="{{ url_for('spider_apple') }}" method="get">
+					<div class="form-group">
+						<label for="keywords"></label>
+						<input type='text' id='keywords' value="{{ params.keywords }}" name='keywords' placeholder="输入前缀关键字" class="form-control" />
+					</div>
+					<div class="form-group ">
+						<input type='text' readOnly="true" value="{{ params.start_date }}" data-date="{{ params.start_date }}" data-date-format="yyyy-mm-dd" id='start_date' name='start_date' placeholder="起始日期" class="form-control" />
+					</div>
+					<span>至</span>
+					<div class="form-group" >
+						<input type='text' readOnly="true" value="{{ params.end_date }}" data-date="{{ params.end_date }}" data-date-format="yyyy-mm-dd" id='end_date' name="end_date" placeholder="结束日期" class="form-control" />
+					</div>
+					<button type="submit" onClick="$('#export_sql').val(0)" class="btn btn-success btn-default">搜索</button>
+					<input type="hidden" name="export_sql" value="0" id='export_sql' />
+					<button type="submit" onClick="$('#export_sql').val(1)" class="btn btn-success btn-default">导出sql</button>
+				</form>
+			</div>
+		  	<div class="panel-body">
+				<table class="table table-bordered">
+					<tbody>
+					  	<tr>
+							<th>Url地址</th>
+							<th>标题</th>
+							<th>创建时间</th>
+						</tr>
+			            {% for i in itunes %}
+						<tr>
+							<td>{{ i.url }}</td>
+							<td>{{ i.title }}</td>
+							<td>{{ i.create_time|timestamp_to_string }}</td>
+						</tr>
+						{% endfor %}
+						
+					</tbody>
+				</table>
+		  	</div>
+		  	<div class="panel-footer">
+		  		<nav>
+					<ul class="pager">
+				    	<li class="previous">
+				    		<a href="{{ url_for('spider_apple') }}?page={{ prev_page }}">
+				    			<span aria-hidden="true">&larr;</span> Older
+				    		</a>
+		    			</li>
+				    	<li class="next">
+				    		<a href="{{ url_for('spider_apple') }}?page={{ next_page }}">
+				    			Newer <span aria-hidden="true">&rarr;</span>
+				    		</a>
+				    	</li>
+				  	</ul>
+				</nav>
+		  	</div>
+		</div>
+    </div>
+{% endblock %}
