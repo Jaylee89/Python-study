@@ -127,6 +127,7 @@ if __name__ == "__main__":
             final_url = public_url + ("list.shtml")
         else:
             final_url = public_url + ("list_%d.shtml" % (i))
+            break
         print('final_url--->', final_url)
         time.sleep(random.randint(0, 2))
         main(i, final_url)

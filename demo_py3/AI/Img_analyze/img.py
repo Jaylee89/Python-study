@@ -66,5 +66,5 @@ def process(infile):
  
     faces = detect_object(infile, save_path) 
  
-if name == "main": 
+if __name__ == "__main__":
     process(r"D:\software\preinstall\DevelopTool\python\demo_py3\AI\Img_analyze\img.jpg")
