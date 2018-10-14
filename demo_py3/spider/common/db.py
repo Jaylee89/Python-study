@@ -12,8 +12,8 @@ class DB(dbconfig):
         self.__cursor = self.__db.cursor()
 
     def close_connection(self):
-        self.__db = None
-        self.__cursor = None
+        self.__db.close()
+        self.__cursor.close()
 
     def update_data(self, sql):
         try:
@@ -21,6 +21,18 @@ class DB(dbconfig):
             self.__db.commit()
             print("self.__db.commit() done")
             log.debug("commit done")
+        except:
+            print("self.__db.commit() have except")
+            log.debug("have except")
+            self.__db.rollback()
+    def get_existing_data(self, sql):
+        data = None
+        try:
+            self.__cursor.execute(sql)
+            data = self.__cursor.fetchone()
+            print("get_existing_data method, data is ", data)
+            log.debug("commit done")
+            return data
         except:
             print("self.__db.commit() have except")
             log.debug("have except")
