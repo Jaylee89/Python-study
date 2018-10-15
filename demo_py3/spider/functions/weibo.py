@@ -3,7 +3,7 @@
 
 # https://github.com/dataabc/weiboSpider
 
-import os, time, re, requests, sys
+import os, random, time, re, requests, sys
 import traceback
 from datetime import datetime
 from datetime import timedelta
@@ -104,6 +104,7 @@ class Weibo:
         except Exception as e:
             print("Error: ", e)
             traceback.print_exc()
+            return ("", "")
 
     # 获取用户微博内容及对应的发布时间、点赞数、转发数、评论数
     def get_weibo_info(self):
@@ -119,6 +120,7 @@ class Weibo:
                     "//input[@name='mp']")[0].attrib["value"])
             pattern = r"\d+\.?\d*"
             for page in range(1, page_num + 1):
+                time.sleep(random.randint(0, 2))
                 url2 = "https://weibo.cn/u/%d?filter=%d&page=%d" % (
                     self.user_id, self.filter, page)
                 html2 = requests.get(url2, cookies=self.cookie).content
@@ -235,7 +237,6 @@ class Weibo:
                         data_list.append((weibo_content, img_link, publish_time))
                 # DB data insert
                 self.update_database(data_list)
-                break
 
             if not self.filter:
                 print("共" + str(self.weibo_num2) + u"条微博")

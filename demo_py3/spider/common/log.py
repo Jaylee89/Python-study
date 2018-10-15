@@ -13,7 +13,7 @@ DEBUG	    10	logging.debug()	    Diagnose problems, show detailed information
 import logging
 from logging.handlers import RotatingFileHandler
 
-filename = '../autolog.log'
+filename = '../log/autolog.log'
 
 #logging.basicConfig(level=logging.DEBUG) #print log in console
 #logging.basicConfig(filename="test.log", level=logging.DEBUG)
@@ -23,7 +23,7 @@ logging.basicConfig(level=logging.DEBUG,
     filename=filename,
     filemode='w')
 
-Rthandler = RotatingFileHandler(filename, maxBytes=10*1024*1024,backupCount=5)
+Rthandler = RotatingFileHandler(filename, maxBytes=10*1024*1024,backupCount=5, encoding="utf-8")
 Rthandler.setLevel(logging.INFO)
 formatter = logging.Formatter('%(asctime)s %(filename)s[line:%(lineno)d] %(levelname)s %(message)s')
 Rthandler.setFormatter(formatter)
