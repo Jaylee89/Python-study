@@ -3,8 +3,7 @@
 
 # https://github.com/dataabc/weiboSpider
 
-import os, random, re, requests, sys
-import time as Time
+import os, random, time, re, requests, sys
 import traceback
 from datetime import datetime
 from datetime import timedelta
@@ -17,7 +16,7 @@ from config.config import DBConfig as dbconfig
 
 
 class Weibo:
-    cookie = {"Cookie": "_T_WM=32574a5519a6b59a7325d3fcc2854360; MLOGIN=0; SUB=_2A252yBshDeRhGeVG41sW9yvEyTWIHXVSMqVprDV6PUJbkdAKLXLekW1NT5MT_1Z3Vy7m4pbf3lSyI4CuqBi2XLdF; SUHB=0mxkQvdVGbY0Nb; SCF=Au_O8r-aSPdhiIknzYsEKNQmLtHVyLkQDIZ0WeWOnR_qCTjuG1wPTgDY-a7RO39pfUQDh-LAo69Co5ip_xuxrAo.; SSOLoginState=1540123505; M_WEIBOCN_PARAMS=luicode%3D10000011%26lfid%3D102803"}  # 将your cookie替换成自己的cookie
+    cookie = {"Cookie": "_T_WM=32574a5519a6b59a7325d3fcc2854360; MLOGIN=0; M_WEIBOCN_PARAMS=luicode%3D10000011%26lfid%3D1076032608649530; WEIBOCN_FROM=1110106030; SUB=_2A252x1NwDeRhGeVG41sW9yvEyTWIHXVSSH04rDV6PUJbkdANLRXSkW1NT5MT_xOa8-rf92MOOVq06n3FFPBBka0d; SUHB=0Yhho4RcwsVur2; SCF=ArTsZbnX-LUWl3jjx0Ggm7HRyVRWqr8tUHKBe8Xhyol9Sdzx3M6sWPFAJAT7RJ38LZYl52cMx-NJjQnS2pM2Fpc.; SSOLoginState=1539515168"}  # 将your cookie替换成自己的cookie
 
     # Weibo类初始化
     def __init__(self, user_id, filter=0):
@@ -37,10 +36,11 @@ class Weibo:
         self.publish_tool = []  # 微博发布工具
 
     # 获取用户昵称
-    def get_username(self):
+    def get_username(self, cookie):
         try:
             url = "https://weibo.cn/%d/info" % (self.user_id)
-            html = requests.get(url, cookies=self.cookie).content
+            # html = requests.get(url, cookies=self.cookie).content
+            html = requests.get(url, cookies=cookie).content
             selector = etree.HTML(html)
             username = selector.xpath("//title/text()")[0]
             self.username = username[:-3]
@@ -121,7 +121,7 @@ class Weibo:
                     "//input[@name='mp']")[0].attrib["value"])
             pattern = r"\d+\.?\d*"
             for page in range(1, page_num + 1):
-                Time.sleep(random.randint(0, 2))
+                time.sleep(random.randint(0, 2))
                 url2 = "https://weibo.cn/u/%d?filter=%d&page=%d" % (
                     self.user_id, self.filter, page)
                 html2 = requests.get(url2, cookies=self.cookie).content
@@ -189,15 +189,15 @@ class Weibo:
                                 "%Y-%m-%d %H:%M")
                         elif u"今天" in publish_time:
                             today = datetime.now().strftime("%Y-%m-%d")
-                            _time = publish_time[3:]
-                            publish_time = today + " " + _time
+                            time = publish_time[3:]
+                            publish_time = today + " " + time
                         elif u"月" in publish_time:
                             year = datetime.now().strftime("%Y")
                             month = publish_time[0:2]
                             day = publish_time[3:5]
-                            _time = publish_time[7:12]
+                            time = publish_time[7:12]
                             publish_time = (
-                                year + "-" + month + "-" + day + " " + _time)
+                                year + "-" + month + "-" + day + " " + time)
                         else:
                             publish_time = publish_time[:16]
                         self.publish_time.append(publish_time)
@@ -238,7 +238,6 @@ class Weibo:
                         data_list.append((weibo_content, img_link, publish_time))
                 # DB data insert
                 self.update_database(data_list)
-                break
 
             if not self.filter:
                 print("共" + str(self.weibo_num2) + u"条微博")
@@ -259,7 +258,7 @@ class Weibo:
         fetch = """select * from education where hashcode='%s'"""
 
         for (title, href, publish) in data:
-            t = Time.strftime("%Y-%m-%d", Time.localtime())
+            t = time.strftime("%Y-%m-%d", time.localtime())
             publish_date = publish.strip()
             temp = """{},{}""".format(title, publish_date)
             hashcode = SHA().getSha512(temp)
@@ -300,8 +299,7 @@ class Weibo:
                                                                        u"发布工具: " + self.publish_tool[i - 1] + "\n\n"
                         )
                 result = result + text
-            file_dir = os.path.split(os.path.realpath(__file__))[
-                           0] + os.sep + "weibo"
+            file_dir = os.path.split(os.path.realpath(__file__))[0] + os.sep
             if not os.path.isdir(file_dir):
                 os.mkdir(file_dir)
             file_path = file_dir + os.sep + "%d" % self.user_id + ".txt"

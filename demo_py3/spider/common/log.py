@@ -13,7 +13,7 @@ DEBUG	    10	logging.debug()	    Diagnose problems, show detailed information
 import logging
 from logging.handlers import RotatingFileHandler
 
-filename = '../log/autolog.log'
+filename = './autolog.log'
 
 #logging.basicConfig(level=logging.DEBUG) #print log in console
 #logging.basicConfig(filename="test.log", level=logging.DEBUG)

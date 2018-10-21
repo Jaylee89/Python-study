@@ -1,0 +1,101 @@
+
+
+https://passport.weibo.cn/signin/login
+
+var ENTRY = 'mweibo';
+var PRELOGIN = 'https://login.sina.com.cn/sso/prelogin.php?checkpin=1&entry=' + ENTRY;
+var LOGIN = 'https://passport.weibo.cn/sso/login';
+var VERIFY_IMAGE = 'https://passport.weibo.cn/captcha/image';
+var STAT_URL = 'https://passport.weibo.cn/stat/s';
+
+https://passport.weibo.cn/sso/login
+https://passport.weibo.cn/signin/login?entry=mweibo&res=wel&wm=3349
+
+parameters:
+
+"{"password":"jal891012","savestate":1,"r":"","ec":0,"pagerefer":"","entry":"mweibo","wentry":"","loginfrom":"","client_id":"","code":"","qq":"","mainpageflag":1,"hff":"","hfp":""}"
+
+password=jal891012&savestate=1&r=&ec=0&pagerefer=&entry=mweibo&wentry=&loginfrom=&client_id=&code=&qq=&mainpageflag=1&hff=&hfp=
+
+response:
+"{"retcode":20000000,"msg":"","data":{"crossdomainlist":{"weibo.com":"https:\/\/passport.weibo.com\/sso\/crossdomain?entry=mweibo&action=login&proj=1&ticket=ST-Mzg4OTc3NTgyOQ%3D%3D-1540105838-tc-9FB0617CFCAD77502058228C3D6FB623-1","sina.com.cn":"https:\/\/login.sina.com.cn\/sso\/crossdomain?entry=mweibo&action=login&proj=1&ticket=ST-Mzg4OTc3NTgyOQ%3D%3D-1540105838-tc-E85C3B5B7910DD0EF77FA7727A2A2724-1","weibo.cn":"https:\/\/passport.sina.cn\/sso\/crossdomain?entry=mweibo&action=login&ticket=ST-Mzg4OTc3NTgyOQ%3D%3D-1540105838-tc-B4063E7E28C2444630B93AB234EB94B1-1"},"loginresulturl":"","uid":"3889775829"}}"
+
+"{"crossdomainlist":{"weibo.com":"https://passport.weibo.com/sso/crossdomain?entry=mweibo&action=login&proj=1&ticket=ST-Mzg4OTc3NTgyOQ%3D%3D-1539964552-yf-1A363CA4E0F7CC03DD11E63C10F5473F-1","sina.com.cn":"https://login.sina.com.cn/sso/crossdomain?entry=mweibo&action=login&proj=1&ticket=ST-Mzg4OTc3NTgyOQ%3D%3D-1539964552-yf-C5A3B991D042168F5BD9E12D66A7F5CD-1","weibo.cn":"https://passport.sina.cn/sso/crossdomain?entry=mweibo&action=login&ticket=ST-Mzg4OTc3NTgyOQ%3D%3D-1539964552-yf-92A9823BAEDF302EDE2706137D7580D6-1"},"loginresulturl":"","uid":"3889775829"}"
+
+https://passport.sina.cn/sso/crossdomain?entry=mweibo&action=login&ticket=ST-Mzg4OTc3NTgyOQ%3D%3D-1539965433-tc-3DFB9A1EAE02744AC056D2F73B02FF3A-1&savestate=1&callback=jsonpcallback1539965821896
+https://passport.weibo.com/sso/crossdomain?entry=mweibo&action=login&proj=1&ticket=ST-Mzg4OTc3NTgyOQ%3D%3D-1539965433-tc-355A691319906914E92C01104BDFBA31-1&savestate=1&callback=jsonpcallback1539965560660
+https://login.sina.com.cn/sso/crossdomain?entry=mweibo&action=login&proj=1&ticket=ST-Mzg4OTc3NTgyOQ%3D%3D-1539965433-tc-179F2AB6AC04EC7802EEBD41717171DC-1&savestate=1&callback=jsonpcallback1539965778280
+
+https://m.weibo.cn/api/remind/unread?t=1539965937633
+
+
+Cookie:
+_T_WM=32574a5519a6b59a7325d3fcc2854360;
+WEIBOCN_FROM=1110006030;
+SUB=_2A252znGpDeRhGeVG41sW9yvEyTWIHXVSMR_hrDV6PUJbkdAKLUemkW1NT5MT_zimJbSsohv2qGxkrLDd1yH2Ud40;
+SUHB=0S7yqrv651SG8e;
+SCF=AkiSDEhXWeO07isJ_CYIJPKzgPzkggBOp88ctv60RDI6euC1Tn1w_F-dRAwVwwx8mIhfvxAtkk7eqWKv3hWbL0o.;
+SSOLoginState=1539965434;
+MLOGIN=1;
+M_WEIBOCN_PARAMS=luicode%3D10000011%26lfid%3D102803%26uicode%3D20000174
+
+request cookie:
+_T_WM=32574a5519a6b59a7325d3fcc2854360;
+//login=292d056da469d8bfa4b9452b3d207f83;
+WEIBOCN_FROM=1110006030;
+MLOGIN=0;
+M_WEIBOCN_PARAMS=uicode%3D10000011%26fid%3D102803
+
+response cookie:
+Set-Cookie:
+    SUB=_2A252znVQDeRhGeVG41sW9yvEyTWIHXVSMRsYrDV6PUJbkdAKLXilkW1NT5MT_41BvW-BvmUjtx719qfOSdcxl1I5; Path=/; Domain=.weibo.cn; Expires=Sat, 19 Oct 2019 16:23:28 GMT; HttpOnly
+Set-Cookie:
+    SUHB=06Z1LcTQwWEarq; expires=Saturday, 19-Oct-2019 16:23:28 GMT; path=/; domain=.weibo.cn
+Set-Cookie:
+    SCF=AkiSDEhXWeO07isJ_CYIJPKzgPzkggBOp88ctv60RDI6zMMGXZVUHQm91lSPioQ5wyQhPnxI1B5KEdE0hDqmHhY.; expires=Monday, 16-Oct-2028 16:23:28 GMT; path=/; domain=.weibo.cn; httponly
+Set-Cookie:
+    SSOLoginState=1539966208; path=/; domain=weibo.cn
+Set-Cookie:
+    ALF=1542558208; expires=Sunday, 18-Nov-2018 16:23:28 GMT; path=/; domain=.sina.cn
+
+
+_T_WM=32574a5519a6b59a7325d3fcc2854360;
+//WEIBOCN_FROM=1110006030;
+SUB=_2A252znVQDeRhGeVG41sW9yvEyTWIHXVSMRsYrDV6PUJbkdAKLXilkW1NT5MT_41BvW-BvmUjtx719qfOSdcxl1I5;
+SUHB=06Z1LcTQwWEarq;
+SCF=AkiSDEhXWeO07isJ_CYIJPKzgPzkggBOp88ctv60RDI6zMMGXZVUHQm91lSPioQ5wyQhPnxI1B5KEdE0hDqmHhY.;
+SSOLoginState=1539966208;
+//hard code, MLOGIN=1;
+//hard code, M_WEIBOCN_PARAMS=uicode%3D20000174
+
+cookie的实现方式：
+1, 仅需要把request/response cookie合并一起即可
+
+2, 需要通过装饰器来实现拿取cookie，在爬数据之前
+
+使用https://weibo.cn/u/2608649530， 来验证用户名是否为空,为空则认为用户需要登录，不为空则认为当前session有效
+
+3, 每次爬虫之前都需要做检测cookie
+
+4, 用户user-agent代理
+
+5, IP 代理
+
+
+=====================================================================================================================
+//done
+_T_WM=32574a5519a6b59a7325d3fcc2854360;
+//done
+WEIBOCN_FROM=1110006030;
+//done
+SUB=_2A252yFY-DeRhGeVG41sW9yvEyTWIHXVSM3p2rDV6PUJbkdAKLXbwkW1NT5MT_01zR0r6O7_eNJcTnVVF5TImKw6O;
+//done
+SUHB=0gHSbZxwWM87AP;
+//done
+SCF=AkiSDEhXWeO07isJ_CYIJPKzgPzkggBOp88ctv60RDI6DF0Rln-2xYdwSfv6LicvqipxxAI0tdnbbnoD-U-WHwM.;
+//done
+SSOLoginState=1540105838;
+MLOGIN=1;
+M_WEIBOCN_PARAMS=lfid%3D102803%26luicode%3D20000174%26uicode%3D20000174
+
+

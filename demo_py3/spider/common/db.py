@@ -2,8 +2,8 @@
 # -*- coding:utf8 -*-
 
 import pymysql
-import spider.common.log as log
-from spider.config.config import DBConfig as dbconfig
+import common.log as log
+from config.config import DBConfig as dbconfig
 
 class DB(dbconfig):
     def __init__(self, dbconfig):

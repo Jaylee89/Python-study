@@ -7,10 +7,10 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 
 import importlib, sys, os, io
-import spider.common.log as log
-from spider.common.db import DB
-from spider.common.hashcode import SHA
-from spider.config.config import DBConfig as dbconfig
+import common.log as log
+from common.db import DB
+from common.hashcode import SHA
+from config.config import DBConfig as dbconfig
 
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf8')
 importlib.reload(sys)
