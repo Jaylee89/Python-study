@@ -31,7 +31,7 @@ def ssl_logon():
     paramiko.util.log_to_file('paramiko.log')
     ssh = paramiko.SSHClient()
     ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-    ssh.connect('47.92.52.175', username='root', password='H$bc1234')
+    ssh.connect('47.92.52.175', username='root', password='test1234')
     cmd = 'ls'
     stdin, stdout, stderr = ssh.exec_command(cmd)
     print(stdout.readlines())
