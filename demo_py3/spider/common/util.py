@@ -1,8 +1,11 @@
 # -*- coding:utf8 -*-
 
-import importlib, sys, os, io
+import importlib, sys, os, io, json, random
+import common.log as log
+
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf8')
 importlib.reload(sys)
+
 
 def cur_file_dir():
     # 获取脚本路径
@@ -25,6 +28,7 @@ def cbk(a, b, c):
         per = 100
     print('%.2f%%' % per)
 
+
 def download(index, title, url):
     print('download url is', url)
 
@@ -45,6 +49,7 @@ def download(index, title, url):
     f = urllib.request.urlopen(url)
     with open(local_path, "wb") as code:
         code.write(f.read())
+        code.close()
 
 
 def get_load_html(url):
@@ -62,7 +67,6 @@ def get_load_html(url):
     html = driver.page_source
     driver.close()
     return html
-
 
     """
     span_list = soup.find_all("span", attrs={"class": "arrow"})  # li list
@@ -89,3 +93,54 @@ def get_load_html(url):
     if len(final_list) > 0:
         result = final_list[0]
     """
+
+
+def load_json(filename):
+    # data = ""
+    file_path = os.path.dirname(__file__) + os.path.sep + "json" + os.path.sep + filename
+    # with open(file_path, "r", 1024, "utf8") as f:
+    #     data = f.read()
+    #     f.close()
+    # return json.loads(data)
+    try:
+        f = open(file_path, "r", 1024, "utf8")
+        data = f.read()
+        f.close()
+    except:
+        log.debug("load_json have except")
+    finally:
+        return json.loads(data)
+
+
+def get_useragent_random():
+    # get file name
+    # current_file_path = os.path.basename(__file__)
+    # file absolution, __file__
+    # os.path.dirname(__file__) + os.path.sep + "json"  + os.path.sep
+    data = load_json("useragent.json")
+    useragents = data.get("useragents")
+    length_of_useragents = len(useragents)
+    return useragents[random.randint(0, length_of_useragents - 1)]
+
+
+def saveFile(content, name):
+    fileName = get_logs_dir() + str(name) + ".html"
+    with open(fileName, "w", 1024, "utf8") as f:
+        # print("正在写入文件", fileName)
+        f.write(content)  # content.encode('utf-8')
+        f.close()
+        # print("saveFile -> f.closed is closed?", f.closed)
+
+
+def get_logs_dir():
+    root_dir = get_root() + os.sep + "logs" + os.sep
+    if not os.path.isdir(root_dir):
+        os.mkdir(root_dir)
+    return root_dir
+
+
+if __name__ == "__main__":
+    data = load_json("cities.json")
+    log.debug(data)
+    data = get_useragent_random()
+    log.debug(data)

@@ -1,0 +1,20 @@
+{
+  "cities": [
+    {
+      "name": "广州",
+      "id": "1",
+      "websites": [
+        {
+          "type": "guangzhou_education",
+          "url": "http://www.gzedu.gov.cn",
+          "encode": "utf-8"
+        },
+        {
+          "type": "weibo",
+          "url": "https://weibo.cn",
+          "encode": "utf-8"
+        }
+      ]
+    }
+  ]
+}

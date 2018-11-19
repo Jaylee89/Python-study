@@ -7,9 +7,11 @@ from urllib import error
 from urllib import parse
 from http import cookiejar
 
+
 class Cookie():
     def __init__(self):
         pass
+
     def save_cookie_to_file(self, req):
         # 设置保存cookie的文件，同级目录下的cookie.txt
         filename = 'cookie.txt'
@@ -77,7 +79,7 @@ class Cookie():
         # 创建Request对象.
         login_url_prelogon = r"https://passport.weibo.cn/signin/login"
         login_url_prelogon_data = {
-            "entry":"mweibo",
+            "entry": "mweibo",
             "res": "wel",
             "wm": "3349",
             "r": "https%3A%2F%2Fm.weibo.cn"
@@ -87,7 +89,8 @@ class Cookie():
         try:
             # 使用自己创建的opener的open方法
             # first link info
-            self.save_cookie_to_file("https://passport.weibo.cn/signin/login?entry=mweibo&res=wel&wm=3349&r=https%3A%2F%2Fm.weibo.cn")
+            self.save_cookie_to_file(
+                "https://passport.weibo.cn/signin/login?entry=mweibo&res=wel&wm=3349&r=https%3A%2F%2Fm.weibo.cn")
             time.sleep(random.randint(2, 3))
             # self.save_cookie_to_file("https://captcha.weibo.com/static/js/patternLock.min.js")
             opener = self.load_existing_cookie()

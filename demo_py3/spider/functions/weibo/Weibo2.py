@@ -3,8 +3,7 @@
 
 # https://github.com/dataabc/weiboSpider
 
-import os, random, re, requests, sys
-import time as Time
+import os, random, time, re, requests, sys
 import traceback
 from datetime import datetime
 from datetime import timedelta
@@ -16,8 +15,9 @@ from common.hashcode import SHA
 from config.config import DBConfig as dbconfig
 
 
-class Weibo:
-    cookie = {"Cookie": "_T_WM=32574a5519a6b59a7325d3fcc2854360; MLOGIN=0; SUB=_2A252yBshDeRhGeVG41sW9yvEyTWIHXVSMqVprDV6PUJbkdAKLXLekW1NT5MT_1Z3Vy7m4pbf3lSyI4CuqBi2XLdF; SUHB=0mxkQvdVGbY0Nb; SCF=Au_O8r-aSPdhiIknzYsEKNQmLtHVyLkQDIZ0WeWOnR_qCTjuG1wPTgDY-a7RO39pfUQDh-LAo69Co5ip_xuxrAo.; SSOLoginState=1540123505; M_WEIBOCN_PARAMS=luicode%3D10000011%26lfid%3D102803"}  # 将your cookie替换成自己的cookie
+class Weibo2:
+    cookie = {
+        "Cookie": "_T_WM=32574a5519a6b59a7325d3fcc2854360; MLOGIN=0; M_WEIBOCN_PARAMS=luicode%3D10000011%26lfid%3D1076032608649530; WEIBOCN_FROM=1110106030; SUB=_2A252x1NwDeRhGeVG41sW9yvEyTWIHXVSSH04rDV6PUJbkdANLRXSkW1NT5MT_xOa8-rf92MOOVq06n3FFPBBka0d; SUHB=0Yhho4RcwsVur2; SCF=ArTsZbnX-LUWl3jjx0Ggm7HRyVRWqr8tUHKBe8Xhyol9Sdzx3M6sWPFAJAT7RJ38LZYl52cMx-NJjQnS2pM2Fpc.; SSOLoginState=1539515168"}  # 将your cookie替换成自己的cookie
 
     # Weibo类初始化
     def __init__(self, user_id, filter=0):
@@ -37,17 +37,18 @@ class Weibo:
         self.publish_tool = []  # 微博发布工具
 
     # 获取用户昵称
-    def get_username(self):
+    def get_username(self, cookie):
         try:
             url = "https://weibo.cn/%d/info" % (self.user_id)
-            html = requests.get(url, cookies=self.cookie).content
+            # html = requests.get(url, cookies=self.cookie).content
+            html = requests.get(url, cookies=cookie).content
             selector = etree.HTML(html)
             username = selector.xpath("//title/text()")[0]
             self.username = username[:-3]
-            print("用户名: " , self.username)
+            log.debug("用户名: ", self.username)
 
         except Exception as e:
-            print("Error: ", e)
+            log.debug("Error: ", e)
             traceback.print_exc()
 
     # 获取用户微博数、关注数、粉丝数
@@ -67,23 +68,23 @@ class Weibo:
                 num_wb = int(value)
                 break
             self.weibo_num = num_wb
-            print("微博数: " , str(self.weibo_num))
+            log.debug("微博数: ", str(self.weibo_num))
 
             # 关注数
             str_gz = selector.xpath("//div[@class='tip2']/a/text()")[0]
             guid = re.findall(pattern, str_gz, re.M)
             self.following = int(guid[0])
-            print("关注数: " , str(self.following))
+            log.debug("关注数: ", str(self.following))
 
             # 粉丝数
             str_fs = selector.xpath("//div[@class='tip2']/a/text()")[1]
             guid = re.findall(pattern, str_fs, re.M)
             self.followers = int(guid[0])
-            print("粉丝数: " + str(self.followers))
-            print("===========================================================================")
+            log.debug("粉丝数: " + str(self.followers))
+            log.debug("===========================================================================")
 
         except Exception as e:
-            print("Error: ", e)
+            log.debug("Error: ", e)
             traceback.print_exc()
 
     # 获取"长微博"全部文字内容
@@ -103,7 +104,7 @@ class Weibo:
 
             return (wb_content, img_link)
         except Exception as e:
-            print("Error: ", e)
+            log.debug("Error: ", e)
             traceback.print_exc()
             return ("", "")
 
@@ -121,14 +122,14 @@ class Weibo:
                     "//input[@name='mp']")[0].attrib["value"])
             pattern = r"\d+\.?\d*"
             for page in range(1, page_num + 1):
-                Time.sleep(random.randint(0, 2))
+                time.sleep(random.randint(0, 2))
                 url2 = "https://weibo.cn/u/%d?filter=%d&page=%d" % (
                     self.user_id, self.filter, page)
                 html2 = requests.get(url2, cookies=self.cookie).content
                 selector2 = etree.HTML(html2)
                 info = selector2.xpath("//div[@class='c']")
                 is_empty = info[0].xpath("div/span[@class='ctt']")
-                data_list=[]
+                data_list = []
                 if is_empty:
                     for i in range(0, len(info) - 2):
                         # 微博内容
@@ -148,11 +149,11 @@ class Weibo:
                                 if wb_content[0]:
                                     weibo_content = wb_content[0]
                         self.weibo_content.append(weibo_content)
-                        print("微博内容: " + weibo_content)
+                        log.debug("微博内容: " + weibo_content)
 
                         # attachment img
                         img_link = wb_content[1]
-                        print("微博img link: " + img_link)
+                        log.debug("微博img link: " + img_link)
 
                         # 微博位置
                         div_first = info[i].xpath("div")[0]
@@ -170,7 +171,7 @@ class Weibo:
                                     sys.stdout.encoding, "ignore").decode(sys.stdout.encoding)
                                 break
                         self.weibo_place.append(weibo_place)
-                        print("微博位置: " + weibo_place)
+                        log.debug("微博位置: " + weibo_place)
 
                         # 微博发布时间
                         str_time = info[i].xpath("div/span[@class='ct']")
@@ -189,19 +190,19 @@ class Weibo:
                                 "%Y-%m-%d %H:%M")
                         elif u"今天" in publish_time:
                             today = datetime.now().strftime("%Y-%m-%d")
-                            _time = publish_time[3:]
-                            publish_time = today + " " + _time
+                            time = publish_time[3:]
+                            publish_time = today + " " + time
                         elif u"月" in publish_time:
                             year = datetime.now().strftime("%Y")
                             month = publish_time[0:2]
                             day = publish_time[3:5]
-                            _time = publish_time[7:12]
+                            time = publish_time[7:12]
                             publish_time = (
-                                year + "-" + month + "-" + day + " " + _time)
+                                year + "-" + month + "-" + day + " " + time)
                         else:
                             publish_time = publish_time[:16]
                         self.publish_time.append(publish_time)
-                        print("微博发布时间: " + publish_time)
+                        log.debug("微博发布时间: " + publish_time)
 
                         # 微博发布工具
                         if len(str_time.split(u'来自')) > 1:
@@ -209,7 +210,7 @@ class Weibo:
                         else:
                             publish_tool = u"无"
                         self.publish_tool.append(publish_tool)
-                        print("微博发布工具: " + publish_tool)
+                        log.debug("微博发布工具: " + publish_tool)
 
                         str_footer = info[i].xpath("div")[-1]
                         str_footer = str_footer.xpath("string(.)").encode(
@@ -220,34 +221,33 @@ class Weibo:
                         # 点赞数
                         up_num = int(guid[0])
                         self.up_num.append(up_num)
-                        print("点赞数: " + str(up_num))
+                        log.debug("点赞数: " + str(up_num))
 
                         # 转发数
                         retweet_num = int(guid[1])
                         self.retweet_num.append(retweet_num)
-                        print("转发数: " + str(retweet_num))
+                        log.debug("转发数: " + str(retweet_num))
 
                         # 评论数
                         comment_num = int(guid[2])
                         self.comment_num.append(comment_num)
-                        print("评论数: " + str(comment_num))
-                        print("===========================================================================")
+                        log.debug("评论数: " + str(comment_num))
+                        log.debug("===========================================================================")
 
                         self.weibo_num2 += 1
 
                         data_list.append((weibo_content, img_link, publish_time))
                 # DB data insert
                 self.update_database(data_list)
-                break
 
             if not self.filter:
-                print("共" + str(self.weibo_num2) + u"条微博")
+                log.debug("共" + str(self.weibo_num2) + u"条微博")
             else:
-                print("共" + str(self.weibo_num) + "条微博，其中" +
-                      str(self.weibo_num2) + "条为原创微博"
-                      )
+                log.debug("共" + str(self.weibo_num) + "条微博，其中" +
+                          str(self.weibo_num2) + "条为原创微博"
+                          )
         except Exception as e:
-            print("Error: ", e)
+            log.debug("Error: ", e)
             traceback.print_exc()
 
     # a_tag_title, a_tag_href, publish_time
@@ -259,7 +259,7 @@ class Weibo:
         fetch = """select * from education where hashcode='%s'"""
 
         for (title, href, publish) in data:
-            t = Time.strftime("%Y-%m-%d", Time.localtime())
+            t = time.strftime("%Y-%m-%d", time.localtime())
             publish_date = publish.strip()
             temp = """{},{}""".format(title, publish_date)
             hashcode = SHA().getSha512(temp)
@@ -268,12 +268,12 @@ class Weibo:
             if retult is not None:
                 continue
             insertScript = insert.format(title, href, t, publish_date, hashcode)
-            print("insertScript is %s" % insertScript)
+            log.debug("insertScript is %s" % insertScript)
             log.debug("insertScript is %s" % insertScript)
             insertDB.update_data(insertScript)
             log.debug("operation done")
 
-        print('data operation successfully')
+        log.debug('data operation successfully')
         insertDB.close_connection()
 
     # 将爬取的信息写入文件
@@ -300,18 +300,17 @@ class Weibo:
                                                                        u"发布工具: " + self.publish_tool[i - 1] + "\n\n"
                         )
                 result = result + text
-            file_dir = os.path.split(os.path.realpath(__file__))[
-                           0] + os.sep + "weibo"
+            file_dir = os.path.split(os.path.realpath(__file__))[0] + os.sep
             if not os.path.isdir(file_dir):
                 os.mkdir(file_dir)
             file_path = file_dir + os.sep + "%d" % self.user_id + ".txt"
             f = open(file_path, "wb")
             f.write(result.encode(sys.stdout.encoding))
             f.close()
-            print("微博写入文件完毕，保存路径:")
-            print(file_path)
+            log.debug("微博写入文件完毕，保存路径:")
+            log.debug(file_path)
         except Exception as e:
-            print("Error: ", e)
+            log.debug("Error: ", e)
             traceback.print_exc()
 
     # 运行爬虫
@@ -321,10 +320,10 @@ class Weibo:
             self.get_user_info()
             self.get_weibo_info()
             self.write_txt()
-            print("信息抓取完毕")
-            print("===========================================================================")
+            log.debug("信息抓取完毕")
+            log.debug("===========================================================================")
         except Exception as e:
-            print("Error: ", e)
+            log.debug("Error: ", e)
 
 
 def main():
@@ -333,22 +332,22 @@ def main():
         # 使用实例,输入一个用户id，所有信息都会存储在wb实例中
         user_id = 2608649530  # 可以改成任意合法的用户id（爬虫的微博id除外）
         filter = 0  # 值为0表示爬取全部微博（原创微博+转发微博），值为1表示只爬取原创微博
-        wb = Weibo(user_id, filter)  # 调用Weibo类，创建微博实例wb
+        wb = Weibo2(user_id, filter)  # 调用Weibo类，创建微博实例wb
         wb.start()  # 爬取微博信息
-        print("用户名: " + wb.username)
-        print("全部微博数: " + str(wb.weibo_num))
-        print("关注数: " + str(wb.following))
-        print("粉丝数: " + str(wb.followers))
+        log.debug("用户名: " + wb.username)
+        log.debug("全部微博数: " + str(wb.weibo_num))
+        log.debug("关注数: " + str(wb.following))
+        log.debug("粉丝数: " + str(wb.followers))
         if wb.weibo_content:
-            print("最新/置顶 微博为: " + wb.weibo_content[0])
-            print("最新/置顶 微博位置: " + wb.weibo_place[0])
-            print("最新/置顶 微博发布时间: " + wb.publish_time[0])
-            print("最新/置顶 微博获得赞数: " + str(wb.up_num[0]))
-            print("最新/置顶 微博获得转发数: " + str(wb.retweet_num[0]))
-            print("最新/置顶 微博获得评论数: " + str(wb.comment_num[0]))
-            print("最新/置顶 微博发布工具: " + wb.publish_tool[0])
+            log.debug("最新/置顶 微博为: " + wb.weibo_content[0])
+            log.debug("最新/置顶 微博位置: " + wb.weibo_place[0])
+            log.debug("最新/置顶 微博发布时间: " + wb.publish_time[0])
+            log.debug("最新/置顶 微博获得赞数: " + str(wb.up_num[0]))
+            log.debug("最新/置顶 微博获得转发数: " + str(wb.retweet_num[0]))
+            log.debug("最新/置顶 微博获得评论数: " + str(wb.comment_num[0]))
+            log.debug("最新/置顶 微博发布工具: " + wb.publish_tool[0])
     except Exception as e:
-        print("Error: ", e)
+        log.debug("Error: ", e)
         traceback.print_exc()
 
 
