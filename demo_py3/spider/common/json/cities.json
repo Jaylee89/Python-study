@@ -5,13 +5,13 @@
       "id": "1",
       "websites": [
         {
-          "type": "guangzhou_education",
+          "type": "education",
           "url": "http://www.gzedu.gov.cn",
           "encode": "utf-8"
         },
         {
           "type": "weibo",
-          "url": "https://weibo.cn",
+          "url": "2608649530",
           "encode": "utf-8"
         }
       ]

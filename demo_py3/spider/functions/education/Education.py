@@ -2,6 +2,7 @@
 
 import re, random, time, datetime
 import urllib
+import traceback
 from bs4 import BeautifulSoup
 
 import importlib, sys, os, io
@@ -9,9 +10,10 @@ import importlib, sys, os, io
 from common.db import DB
 from common.hashcode import SHA
 import common.util as util
-from common.nosqldb import NoSqlDB as nosqldb
+import common.log as log
 
 from config.config import DBConfig as dbconfig
+from common.nosqldb import NoSqlDB as nosqldb
 from config.config import NoSQLConfig as nosqlconfig
 
 from functions.dao.Moment import Moment
@@ -30,7 +32,7 @@ Guang Zhou Education
 class Education(object):
     def __init__(self, host, id):
         self._host = host
-        self._id = id
+        self._city_id = id
 
     def path_absolution(self):
         return "{}{}".format(self._host, "/gzsjyj/tzgg/{}")
@@ -86,7 +88,11 @@ class Education(object):
         fetch = """select * from education where hashcode='%s'"""
 
         dicts = []  # for mongo data
+        reproduce_index = 0
+        has_reproduce = False
         for (title, href, publish) in data:
+            if has_reproduce:
+                break
             t = time.strftime("%Y-%m-%d", time.localtime())
             publish_date = publish.strip()
             temp = """{},{}""".format(title, publish_date)
@@ -94,21 +100,32 @@ class Education(object):
             fetchScript = fetch % hashcode
             retult = fetchDB.get_existing_data(fetchScript)
             if retult is not None:
+                reproduce_index += 1
+                if reproduce_index == 3:
+                    has_reproduce = True
                 continue
-            insertScript = insert.format(title, href, t, publish_date, hashcode, self._id)
+            insertScript = insert.format(title, href, t, publish_date, hashcode, self._city_id)
             log.debug("insertScript is %s" % insertScript)
             log.debug("insertScript is %s" % insertScript)
-            insertDB.update_data(insertScript)
-            log.debug("operation done")
+            try:
+                insertDB.update_data(insertScript)
+                log.debug("operation done")
+            except Exception as e:
+                log.debug("Error: ", e)
+                traceback.print_exc()
             log.debug("insert data to mongo, prepare data")
-            dicts.append(Moment(self._id, title, href, publish_date).get_dict())
-            break
+            dicts.append(Moment(self._city_id, title, href, publish_date).get_dict())
 
         log.debug('data operation successfully to mysql')
         insertDB.close_connection()
         log.debug("insert data to mongo, start")
-        nosql = nosqldb(nosqlconfig())
-        nosql.insert_many("News", dicts)
+        try:
+            if len(dicts) is not 0:
+                nosql = nosqldb(nosqlconfig())
+                nosql.insert_many("News", dicts)
+        except Exception as e:
+            log.debug("Error: ", e)
+            traceback.print_exc()
         log.debug("insert data to mongo, end")
 
     def get_full_address(self, href):
@@ -146,9 +163,8 @@ class Education(object):
         for i in list(range(1, max_page)):
             if i is not 1:
                 final_url = public_url.format("list_%d.shtml" % (i))
-                break
             log.debug('final_url--->' + final_url)
-            time.sleep(random.randint(0, 2))
+            time.sleep(random.randint(3, 5))
             self.main(i, final_url)
 
         end = datetime.datetime.now()

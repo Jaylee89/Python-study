@@ -3,31 +3,36 @@
 import re, random, time, datetime
 import importlib, sys, os, io
 from functions.education.Education import Education
+from functions.weibo.Weibo import Weibo
+from lib.SpiderThread import SpiderThread
 
 # sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf8')
 # importlib.reload(sys)
 
+def get_education_start(url, id):
+    Education(url, id).start()
+
+def get_weibo_start(url, id):
+    Weibo(url, id).start()
 
 
 if __name__ == "__main__":
-    edu = Education(r"http://www.gzedu.gov.cn", 1)
-    edu.start()
+    import common.util as util
+    import common.log as log
+    json = util.load_json("cities.json")
+    threads = []
+    for city in json["cities"]:
+        name, id, websites = city["name"], city["id"], city["websites"]
+        log.debug("name is {}, id is {}".format(name, id))
+        for website in websites:
+            type, url = website["type"], website["url"]
+            if "education" == type:
+                threads.append(SpiderThread(get_education_start, url, id, name = type))
+            elif "weibo" == type:
+                threads.append(SpiderThread(get_weibo_start, url, id, name = type))
 
-    begin = datetime.datetime.now()
-    # edu = gz_education(r"http://www.gzedu.gov.cn/gzsjyj/tzgg/")
-    edu = gz_education(r"http://www.gzedu.gov.cn", 1)
-    public_url = edu.path_absolution()
-    final_url = public_url.format("list.shtml")
-
-    max_page = edu.getMaxPage(final_url)
-    # max_page = 5
-    for i in list(range(1, max_page)):
-        if i is not 1:
-            final_url = public_url.format("list_%d.shtml" % (i))
-            break
-        log.debug('final_url--->' + final_url)
-        time.sleep(random.randint(0, 2))
-        edu.main(i, final_url)
-    end = datetime.datetime.now()
-    k = end - begin
-    log.debug("complete spider, usage time is %s" % k)
+    len = range(len(threads))
+    for i in len:
+        threads[i].start()
+    for i in len:
+        threads[i].join()

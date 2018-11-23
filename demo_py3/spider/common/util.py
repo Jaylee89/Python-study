@@ -106,8 +106,8 @@ def load_json(filename):
         f = open(file_path, "r", 1024, "utf8")
         data = f.read()
         f.close()
-    except:
-        log.debug("load_json have except")
+    except Exception as e:
+        log.debug("load_json have except", e)
     finally:
         return json.loads(data)
 
@@ -133,7 +133,7 @@ def saveFile(content, name):
 
 
 def get_logs_dir():
-    root_dir = get_root() + os.sep + "logs" + os.sep
+    root_dir = log.get_root() + os.sep + "logs" + os.sep
     if not os.path.isdir(root_dir):
         os.mkdir(root_dir)
     return root_dir
