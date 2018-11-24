@@ -1,7 +1,6 @@
 # -*- coding:utf8 -*-
 
-import re, random, time, datetime
-import importlib, sys, os, io
+# import importlib, sys, os, io
 from functions.education.Education import Education
 from functions.weibo.Weibo import Weibo
 from lib.SpiderThread import SpiderThread

@@ -56,7 +56,7 @@ class Education(object):
         html = self.get_html(v)
         data = self.parserHtml(html)
         log.debug(r'main-->method-->urls\'s length is', len(data))
-        self.update_database(data)
+        return self.update_database(data)
 
     def parserHtml(self, content):
         # soup = BeautifulSoup(content,'html.parser',from_encoding='utf-8').decode('gbk')
@@ -127,6 +127,7 @@ class Education(object):
             log.debug("Error: ", e)
             traceback.print_exc()
         log.debug("insert data to mongo, end")
+        return has_reproduce
 
     def get_full_address(self, href):
         return "{}{}".format(self._host, "{}".format(href[5:]))
@@ -165,11 +166,13 @@ class Education(object):
                 final_url = public_url.format("list_%d.shtml" % (i))
             log.debug('final_url--->' + final_url)
             time.sleep(random.randint(3, 5))
-            self.main(i, final_url)
+            has_reproduce = self.main(i, final_url)
+            if has_reproduce:
+                break
 
         end = datetime.datetime.now()
         k = end - begin
-        log.debug("complete spider, usage time is %s" % k)
+        log.debug("complete education spider, usage time is %s" % k)
 
 
 # if __name__ == "__main__":

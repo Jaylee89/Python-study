@@ -103,7 +103,8 @@ class Weibo:
         try:
             html = requests.get(weibo_link, cookies=self.cookie).content
             selector = etree.HTML(html)
-            info = selector.xpath("//div[@class='c']")[1]
+            # info = selector.xpath("//div[@class='c']")[1]
+            info = selector.xpath("//div[@id='M_']")[0]
             wb_content = info.xpath("div/span[@class='ctt']")[0].xpath(
                 "string(.)").encode(sys.stdout.encoding, "ignore").decode(
                 sys.stdout.encoding)
@@ -148,16 +149,17 @@ class Weibo:
                         weibo_content = str_t[0].xpath("string(.)").encode(
                             sys.stdout.encoding, "ignore").decode(
                             sys.stdout.encoding)
-                        weibo_content = weibo_content[:-1]
+                        weibo_content = weibo_content[:-7]
                         weibo_id = info[i].xpath("@id")[0][2:]
                         a_link = info[i].xpath(
                             "div/span[@class='ctt']/a/@href")
                         wb_long_content = None
+                        weibo_fill_link = None
                         if a_link:
                             if (a_link[-1] == "/comment/" + weibo_id or
                                                 "/comment/" + weibo_id + "?" in a_link[-1]):
-                                weibo_link = "https://weibo.cn" + a_link[-1]
-                                wb_long_content = self.get_long_weibo(weibo_link)
+                                weibo_fill_link = "https://weibo.cn" + a_link[-1]
+                                wb_long_content = self.get_long_weibo(weibo_fill_link)
                                 if wb_long_content[0]:
                                     weibo_content = wb_long_content[0]
                         self.weibo_content.append(weibo_content)
@@ -170,7 +172,8 @@ class Weibo:
                             if len(a_link) != 0:
                                 img_link = a_link[0]
                         else:
-                            img_link = wb_long_content[1]
+                            img_link = weibo_fill_link
+                            # img_link = wb_long_content[1]
                         log.debug("微博img link: " + img_link)
 
                         # 微博位置
@@ -256,7 +259,9 @@ class Weibo:
 
                         data_list.append((weibo_content, img_link, publish_time))
                 # DB data insert
-                self.update_database(data_list)
+                has_reproduce = self.update_database(data_list)
+                if has_reproduce:
+                    break
 
             if not self.filter:
                 log.debug("共" + str(self.weibo_num2) + u"条微博")
@@ -316,6 +321,7 @@ class Weibo:
             log.debug("Error: ", e)
             traceback.print_exc()
         log.debug("insert data to mongo, end")
+        return has_reproduce
 
     # 将爬取的信息写入文件
     def write_txt(self):
@@ -357,6 +363,7 @@ class Weibo:
 
     # 运行爬虫
     def start(self):
+        begin = datetime.now()
         try:
             # self.get_username()
             # self.get_user_info()
@@ -366,6 +373,9 @@ class Weibo:
             log.debug("===========================================================================")
         except Exception as e:
             log.debug("Error: ", e)
+        end = datetime.now()
+        k = end - begin
+        log.debug("complete weibo spider, usage time is %s" % k)
 
 
 def main():
