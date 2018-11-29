@@ -1,0 +1,6 @@
+pymongo
+pymysql
+lxml
+beautifulsoup4
+requests
+rsa
