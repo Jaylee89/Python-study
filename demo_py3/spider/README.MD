@@ -28,11 +28,12 @@
     - python3 -v
     
 #### bootstrap setup
+https://www.cnblogs.com/zhengah/p/4952311.html
 0. [Reference page](https://www.cnblogs.com/LittleMore/p/6693154.html)
 1. python3 app.py
 2. chmod -R 777 main.sh
 3. /etc/crontab
-0 3 * * * root /usr/local/main.sh
+0 */3 * * * root /usr/local/main.sh
 4. service crond restart
 
 #### install dependency
