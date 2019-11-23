@@ -1,0 +1,39 @@
+<appcenter.models.ReleaseDetailsResponse object at 0x10a63ccc0>
+android_min_api_level:'21'
+app_display_name:'App Test'
+app_icon_url:'https://rink.hockeyapp.net/api/2/apps/2fddce9b36db4efc9580673a735dc02c?format=png'
+app_name:'App-Test'
+app_os:'Android'
+build:<appcenter.models.BuildInfo object at 0x109579e80>
+branch_name:'test_branch'
+commit_hash:'1234567890123456789012345678901234567890'
+commit_message:'This is a commit message'
+bundle_identifier:'my.com.hsbc.hsbcmalaysia'
+can_resign:None
+destinations:[<appcenter.models.De...109579be0>]
+0:<appcenter.models.Destination object at 0x109579be0>
+__len__:1
+device_family:None
+download_url:'https://rink.hockeyapp.net/api/2/apps/2fddce9b36db4efc9580673a735dc02c/app_versions/2?format=apk&avtoken=1e3a21ca6840a3cd15065ff5871a966bbbb0db4f&download_origin=hockeyapp&mctoken=375dd473a1e97cc8774f1decdb767e22a299ef77'
+enabled:True
+fingerprint:'86e8d9d9cc0ebe4948fe6d1270ad75f3'
+identifier:2
+install_url:'https://rink.hockeyapp.net/api/2/apps/2fddce9b36db4efc9580673a735dc02c/app_versions/2?format=apk&avtoken=1e3a21ca6840a3cd15065ff5871a966bbbb0db4f&download_origin=hockeyapp&mctoken=375dd473a1e97cc8774f1decdb767e22a299ef77'
+is_provisioning_profile_syncing:None
+is_udid_provisioned:None
+min_os:'5.0'
+origin:<ReleaseOrigin.appcenter: 'appcenter'>
+name:'appcenter'
+value:'appcenter'
+package_hashes:['741bc7747d63744264f...ed98ea2dc']
+0:'741bc7747d63744264f45427d41d32b734a3b4ece69af64e4ba25f7ed98ea2dc'
+__len__:1
+provisioning_profile_expiry_date:None
+provisioning_profile_name:None
+provisioning_profile_type:None
+release_notes:'These are some release notes'
+short_version:'2.4.0'
+size:16971936
+status:None
+uploaded_at:datetime.datetime(2019, 11, 23, 12, 43, 54)
+version:'20'
