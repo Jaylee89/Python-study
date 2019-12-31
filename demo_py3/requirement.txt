@@ -1,1 +1,3 @@
 appcenter
+opencv_python
+scikit-image
