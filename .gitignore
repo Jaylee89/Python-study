@@ -107,3 +107,4 @@ venv.bak/
 # Others
 logs
 .DS_Store
+backups/

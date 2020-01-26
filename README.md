@@ -10,3 +10,7 @@ P-y-t-h-o~n study
 - [Generate PDF/HTML with themes](https://github.com/Jaylee89/python3-cookbook)
 - [多线程+多进程1](http://www.tendcode.com/article/jiandan-meizi-spider-2/)
 - [多线程+多进程2](http://www.tendcode.com/article/spider-for-domain/)
+
+## Python env
+conda env list
+conda activate python37
